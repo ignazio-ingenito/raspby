@@ -1,0 +1,13 @@
+[Unit]
+Description=ASGI instance to serve raspbyweb
+After=network.target
+
+[Service]
+User=ignazio
+Group=www-data
+WorkingDirectory={your_rasp_by_web_path}/webapp
+Environment="PATH={your_rasp_by_web_path}/lib/bin"
+ExecStart={your_rasp_by_web_path}/lib/bin/gunicorn -w 4 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*" --bind unix:/tmp/rasp_by_web.sock app:app
+
+[Install]
+WantedBy=multi-user.target

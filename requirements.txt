@@ -1,0 +1,9 @@
+aiofiles
+fastapi
+gunicorn
+httptools
+jinja2
+uvicorn
+pandas
+psutil
+uvloop

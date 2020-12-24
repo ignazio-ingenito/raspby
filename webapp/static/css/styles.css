@@ -1,0 +1,78 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+
+:root {
+    --ball-height: 20px;
+    --ball-width: 20px;
+    --bounce-height: 80px;
+}
+
+html {
+  background: url(/static/images/london.jpg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+body {
+  background-color: yellowgreen;
+  opacity: 98%;
+}
+
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loading .text {
+  color: #fbae17;
+  display: inline-block;
+  margin-left: 1rem;
+  font-size: 30px;
+}
+
+/* Loading spinner */
+
+.loading .bounceball {
+  position: relative;
+  display: inline-block;
+  height: var(--bounce-height);
+  width: var(--ball-width);
+  transform: translate(0px, -5px);
+}
+
+.loading .bounceball:before {
+  position: absolute;
+  content: '';
+  display: block;
+  top: 0;
+  width: var(--ball-width);
+  height: var(--ball-height);
+  border-radius: 50%;
+  background-color: #fbae17;
+  transform-origin: 50%;
+  animation: bounce 500ms alternate infinite ease;
+}
+
+@keyframes bounce {
+  0% {
+    top: var(--bounce-height);
+    height: 5px;
+    border-radius: 60px 60px 20px 20px;
+    transform: scaleX(2);
+  }
+  35% {
+    height: var(--ball-height);
+    border-radius: 50%;
+    transform: scaleX(1);
+  }
+  100% {
+    top: 0;
+  }
+}
