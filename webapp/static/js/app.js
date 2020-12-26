@@ -22,7 +22,7 @@ import { Users } from "./components/users"
 
 const App = () => {
     const {data, error} = useRequest('/info', null, {
-        refreshInterval: 5000, 
+        refreshInterval: 1000, 
         suspense: true
     })
     
