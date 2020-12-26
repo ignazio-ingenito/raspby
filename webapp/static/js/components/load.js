@@ -1,71 +1,58 @@
 import React from 'react'
 import { useEffect, useRef } from 'react'
-import Chart from 'chart.js'
+
+let canvas = null
+let context = null
 
 export const Load = ({load, history}) => {
-    const labels = [1, 5, 15]
     const chartRef = useRef()
 
-    Chart.defaults.global.tooltips.enabled = false
-    Chart.defaults.global.legend.display = false
-    Chart.defaults.global.title.display = false
-    Chart.defaults.global.elements.point.hoverRadius = 1
-    Chart.defaults.global.animation.duration = 0
+    const drawLine = plot => {
+        context.beginPath() 
+        context.lineWidth = 2
+        context.strokeStyle = '#b9e655'
+        
+        plot.map(([x, y], n) => (n == 0) ? context.moveTo(x, y) : context.lineTo(x, y))
+        context.stroke()
+    }
+
+    const drawArea = plot => {
+        context.beginPath() 
+        context.fillStyle = 'rgba(185, 230, 85, .1)'
+        
+        plot.map(([x, y], n) => (n == 0) ? context.moveTo(x, y) : context.lineTo(x, y))
+        context.lineTo(canvas.width, 0)
+        context.lineTo(0, 0)
+
+        context.closePath()        
+        context.fill()        
+    }
 
     useEffect(() => {
-        const ctx = chartRef.current.getContext('2d')
+        canvas = chartRef.current
+        context = chartRef.current.getContext('2d')
 
-        new Chart(ctx, {
-            type: 'line',
-            title: {
-                display: false,
-            },
-            data: {
-                labels: labels,
-                datasets: [{
-                    fill: 'origin',
-                    data: history,
-                    borderColor: 'rgba(185, 230, 85, 1)',
-                    borderWidth: 1,
-                    pointRadius: 1,
-                    lineTension: 0,
-                    backgroundColor: 'rgba(185, 230, 85, .1)'
-                }],
-            },
-            options: {
-                maintainAspectRatio: false,
-                responsive: true,                
-                scales: {
-                    xAxes: [{
-                        display: false,
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            min: 0,
-                            max: 100,
-                        },
-                        display: false,
-                    }]
-                }
-            },
-        })
+        context.transform(1, 0, 0, -1, 0, canvas.height)
+    }, [])
+
+    useEffect(() => {
+        const plot = history
+            .map((y, n) => [n / (history.length-1), y / 100])
+            .map(([x, y]) => [x * canvas.width, y * canvas.height])        
+    
+        // clear the canvas
+        context.clearRect(0, 0, canvas.width, canvas.height)
+
+        drawLine(plot)
+        drawArea(plot)
+
     }, [history])
-
-    const height = 130
-    const width = 130
-    const styleCanvas = {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        zIndex: 1,
-    }
 
     return (
         <>
-            <div className="load">
-                <div className="h-full text-5xl">{load}%</div>
+            <div className="load" data-load={`${load}%`}>
+                <canvas ref={chartRef} height="300px" height="130px"></canvas>
             </div>
-            <canvas ref={chartRef} style={styleCanvas} height={height} width={width}></canvas>
         </>
     )
 }

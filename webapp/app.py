@@ -1,16 +1,20 @@
-import sysmon
+import os
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-# systemctl stop raspbyweb
-# systemctl start raspbyweb
+from sysmon import Monitor
 
-monitor = sysmon.Monitor()
+# sudo systemctl stop raspbyweb
+# sudo systemctl start raspbyweb
+# sudo systemctl restart raspbyweb
+
+monitor = Monitor()
+static_path = "/home/ignazio/projects/raspbyweb/webapp/static"
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=static_path), name="static")
 templates = Jinja2Templates(directory="templates")
 
 

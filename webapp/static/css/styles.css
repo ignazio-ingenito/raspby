@@ -76,3 +76,13 @@ body {
     top: 0;
   }
 }
+
+div.load::after {
+  content: attr(data-load);
+  font-size: 3rem;
+  line-height: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

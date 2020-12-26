@@ -2,6 +2,7 @@ import psutil
 import pandas as pd
 import logging
 import datetime
+import threading
 import collections
 from math import log
 
@@ -10,6 +11,31 @@ defaultdict = collections.defaultdict(dict)
 
 class Monitor(object):
     """System monitor class module"""
+
+    def __init__(self):
+        self.lock = threading.Lock()
+        self.__cpu_history = []
+
+    @property
+    def cpu_history(self):
+        return self.__cpu_history
+
+    @cpu_history.setter
+    def cpu_history(self, value, limit=50):
+        try:
+            self.lock.acquire()
+
+            try:
+                elapsed = datetime.datetime.now() - self.__cpu_history[-1]
+                if elapsed.seconds >= 5:
+                    self.__cpu_history.append(value)
+            except (Exception,):
+                self.__cpu_history.append(value)
+
+            if len(self.__cpu_history) > 20:
+                self.__cpu_history = self.__cpu_history[-limit:]
+        finally:
+            self.lock.release()
 
     @property
     def info(self) -> dict:
@@ -107,9 +133,9 @@ class Monitor(object):
         # cpu_freq
         # cpu_times
         # cpu_percent
-        # getloadavg
-        loadavg = reversed(psutil.getloadavg())
-        cpu_count = psutil.cpu_count()
+
+        cpu_percent = psutil.cpu_percent()
+        self.cpu_history = cpu_percent
 
         cpu_times = psutil.cpu_times()._asdict()
         cpu_times['total'] = sum(cpu_times.values())
@@ -117,10 +143,10 @@ class Monitor(object):
             cpu_times[k] = 0 if cpu_times[k] == 0 else log(cpu_times[k])
 
         return {
+            'history': self.cpu_history,
+            'percent': cpu_percent,
             'count': psutil.cpu_count(),
             'frequency': psutil.cpu_freq(),
-            'percent': psutil.cpu_percent(),
-            'history': [a / cpu_count * 100 for a in loadavg],
             'times': cpu_times,
         }
 

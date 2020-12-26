@@ -5,5 +5,7 @@ httptools
 jinja2
 uvicorn
 pandas
+pytest
 psutil
+requests
 uvloop
