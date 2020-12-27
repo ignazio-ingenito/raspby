@@ -1,13 +1,17 @@
 import React from 'react'
 import _ from 'lodash'
 
-import { memory as mem } from './util'
+import { toMemory } from '../util'
+import { IDisk } from '../interfaces'
 
-export const Swap = ({swap}) => {
-    const percent = _.get(swap, 'percent')
-    const used = _.get(swap, 'used')
-    const free = _.get(swap, 'free')
-    const total = _.get(swap, 'total')
+interface IDiskProps {
+    disk?: IDisk
+}
+
+export const Disk = ({ disk = {} }: IDiskProps) => {
+
+    const { usage = {} } = disk
+    const { percent = 0, used, free, total } = usage
 
     return (
         <div className="flex flex-col">
@@ -20,9 +24,9 @@ export const Swap = ({swap}) => {
                 <span className="text-xs border-b-2 border-app-green">Used</span>
                 <span className="text-xs border-b-2 border-app-green">Free</span>
                 <span className="text-xs border-b-2 border-app-green">Total</span>
-                <div className="text-sm">{mem(used)}</div>
-                <div className="text-sm">{mem(free)}</div>
-                <div className="text-sm">{mem(total)}</div>
+                <div className="text-sm">{toMemory(used)}</div>
+                <div className="text-sm">{toMemory(free)}</div>
+                <div className="text-sm">{toMemory(total)}</div>
             </div>
         </div>
     )

@@ -1,14 +1,20 @@
 import React from 'react'
 import _ from 'lodash'
 
+import { INet } from "../interfaces"
 
-export const Connections = ({connections}) => {
-    
-    if (connections.length <= 0) return <span>No connections</span>
+export interface INetConnectionsProps {
+    net?: INet
+}
+
+export const Connections = ({ net = {} }: INetConnectionsProps) => {
+    const { connections = [] } = net
+
+    if (Object.keys(connections).length <= 0) return <span>No connections</span>
 
     return (
         <div className="flex flex-col absolute">
-            <div className="grid gap-x-0.5 text-center" 
+            <div className="grid gap-x-0.5 text-center"
                 style={{
                     gridTemplateColumns: 'repeat(5, min-content)',
                 }}>
@@ -19,14 +25,11 @@ export const Connections = ({connections}) => {
                 <span className="text-xs border-b-2 border-app-green whitespace-nowrap">none</span>
                 {
                     Object.entries(connections)
-                        .filter(([ip, e]) => ip.length > 4)
-                        .filter(([ip, e]) => _(e).values().sum() > 0)
-                        .map(([ip, e]) => {
-                            const established = _.get(e, 'established', '').toString().replace('0', '')
-                            const listen = _.get(e, 'listen', '').toString().replace('0', '')
-                            const time_wait = _.get(e, 'time_wait', '').toString().replace('0', '')
-                            const none = _.get(e, 'none', '').toString().replace('0', '')
-                            
+                        .filter(([ip,]) => ip.length > 4)
+                        .filter(([ip, connection]) => _(connection).values().sum() > 0)
+                        .map(([ip, connection]) => {
+                            const { established, listen, time_wait, none } = connection
+
                             return (
                                 <React.Fragment key={ip}>
                                     <span className="text-xs pr-2 text-left">{ip}</span>

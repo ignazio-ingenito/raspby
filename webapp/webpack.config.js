@@ -1,6 +1,9 @@
 module.exports = {
     entry: {
-        main: "./static/js/app.js",
+        main: "./static/js/app.tsx",
+    },
+    resolve: {
+        extensions: [".js", ".json", ".ts", ".tsx"],
     },
     module: {
         rules: [
@@ -18,7 +21,7 @@ module.exports = {
             {
                 test: /\.(svg|png|jpg|jpeg|gif)$/,
                 loader: "file-loader",
-
+                exclude: /node_modules/,
                 options: {
                     name: "[name].[ext]",
                     outputPath: "../../static/dist",
@@ -28,6 +31,11 @@ module.exports = {
                 test: /\.css$/i,
                 use: ["style-loader", "css-loader"],
             },
+            {
+                test: /\.(ts|tsx)$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            }
         ],
     },
     output: {

@@ -1,15 +1,16 @@
 import React from 'react'
 import _ from 'lodash'
 
-import { dec, memory as mem } from './util'
+import { toDecimal, toMemory } from '../util'
+import { IDisk } from '../interfaces'
 
-export const DiskCounters = ({disk}) => {
-    const readCount = _.get(disk, 'counters.read_count')
-    const readTime = _.get(disk, 'counters.read_time')
-    const readBytes = _.get(disk, 'counters.read_bytes')
-    const writeCount = _.get(disk, 'counters.write_count')
-    const writeTime = _.get(disk, 'counters.write_time')
-    const writeBytes = _.get(disk, 'counters.write_bytes')
+interface IDiskCountersProps {
+    disk?: IDisk
+}
+
+export const DiskCounters = ({ disk = {} }: IDiskCountersProps) => {
+    const { counters = {} } = disk
+    const { read_count, read_time, read_bytes, write_count, write_time, write_bytes } = counters
 
     return (
         <div className="flex flex-col">
@@ -17,17 +18,17 @@ export const DiskCounters = ({disk}) => {
                 <span className="text-xs border-b-2 border-app-green">read count</span>
                 <span className="text-xs border-b-2 border-app-green">read time</span>
                 <span className="text-xs border-b-2 border-app-green">read bytes</span>
-                <div className="text-sm">{dec(readCount)}</div>
-                <div className="text-sm">{readTime}ms</div>
-                <div className="text-sm">{mem(readBytes)}</div>
+                <div className="text-sm">{toDecimal(read_count)}</div>
+                <div className="text-sm">{read_time || ''}ms</div>
+                <div className="text-sm">{toMemory(read_bytes)}</div>
             </div>
             <div className="grid grid-cols-3 gap-x-0.5 text-center pt-4">
                 <span className="text-xs border-b-2 border-app-green">write count</span>
                 <span className="text-xs border-b-2 border-app-green">write time</span>
                 <span className="text-xs border-b-2 border-app-green">write bytes</span>
-                <div className="text-sm">{dec(writeCount)}</div>
-                <div className="text-sm">{writeTime}ms</div>
-                <div className="text-sm">{mem(writeBytes)}</div>
+                <div className="text-sm">{toDecimal(write_count)}</div>
+                <div className="text-sm">{write_time || ''}ms</div>
+                <div className="text-sm">{toMemory(write_bytes)}</div>
             </div>
         </div>
     )
