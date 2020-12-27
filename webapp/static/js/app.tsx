@@ -31,7 +31,7 @@ const App = () => {
     const { cpu = {}, disk = {}, memory = {}, net = {}, swap = {}, temperatures = 0, uptime = {}, users = [] } = data
 
     return (
-        <span>
+        <>
             <Tile title="Uptime" body={<Uptime uptime={uptime} />} />
             <Tile title="Load" body={<Load cpu={cpu} />} />
             <Tile title="Temp" body={<Temp temperature={temperatures} />} />
@@ -45,7 +45,7 @@ const App = () => {
             <Tile title="Net counters" body={<NetCounters net={net} />} />
             <Tile title="Users" body={<Users users={users} />} />
             <Tile title="Connections" body={<Connections net={net} />} />
-        </span>
+        </>
     )
 }
 
