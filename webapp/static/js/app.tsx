@@ -5,6 +5,7 @@ import axios from "axios"
 import _ from 'lodash'
 
 // Custom components
+import { Clock } from "./components/clock"
 import { Connections } from "./components/connections"
 import { Cpu } from "./components/cpu"
 import { CpuCounters } from "./components/cpuCounters"
@@ -32,6 +33,7 @@ const App = () => {
 
     return (
         <>
+            <Tile body={<Clock /> } />
             <Tile title="Uptime" body={<Uptime uptime={uptime} />} />
             <Tile title="Load" body={<Load cpu={cpu} />} />
             <Tile title="Temp" body={<Temp temperature={temperatures} />} />
